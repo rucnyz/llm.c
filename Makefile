@@ -1,5 +1,6 @@
 CC ?= clang
-CFLAGS = -O3 -Ofast -Wno-unused-result
+CFLAGS = -O3 -Ofast -fno-fast-math -Wno-unused-result
+DEBUGFLAGS = -g
 LDFLAGS =
 LDLIBS = -lm
 INCLUDES =
@@ -45,13 +46,19 @@ endif
 # default target is all
 all: train_gpt2 test_gpt2 train_gpt2cu test_gpt2cu
 
+train_gpt2_debug: train_gpt2.c
+	$(CC) $(CFLAGS) $(INCLUDES) $(LDFLAGS) $(DEBUGFLAGS) $< $(LDLIBS) -o $@
+
 train_gpt2: train_gpt2.c
 	$(CC) $(CFLAGS) $(INCLUDES) $(LDFLAGS) $< $(LDLIBS) -o $@
 
 test_gpt2: test_gpt2.c
-	$(CC) $(CFLAGS) $(INCLUDES) $(LDFLAGS) $< $(LDLIBS) -o $@
+	$(CC) $(CFLAGS) $(INCLUDES) $(LDFLAGS) $(DEBUGFLAGS) $< $(LDLIBS) -o $@
 
 # possibly may want to disable warnings? e.g. append -Xcompiler -Wno-unused-result
+train_gpt2cu_debug: train_gpt2.cu
+	nvcc -O3 --use_fast_math $(DEBUGFLAGS) $< -lcublas -o $@
+
 train_gpt2cu: train_gpt2.cu
 	nvcc -O3 --use_fast_math $< -lcublas -o $@
 
