@@ -60,10 +60,10 @@ train_gpt2cu_debug: train_gpt2.cu
 	nvcc -O3 --use_fast_math $(DEBUGFLAGS) $< -lcublas -o $@
 
 train_gpt2cu: train_gpt2.cu
-	nvcc -O3 --use_fast_math $< -lcublas -o $@
+	nvcc -O3 --use_fast_math $< -lcublas -lcublasLt -o $@
 
 test_gpt2cu: test_gpt2.cu
-	nvcc -O3 --use_fast_math $< -lcublas -o $@
+	nvcc -O3 --use_fast_math $< -lcublas -lcublasLt -o $@
 
 clean:
 	rm -f train_gpt2 test_gpt2 train_gpt2cu test_gpt2cu
